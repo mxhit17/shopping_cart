@@ -1,21 +1,40 @@
 # shopping_cart
 
-E-commerce app Flutter project for Hava Havai.
-![Simulator Screenshot - iPhone 16 Pro Max - 2025-03-26 at 21 08 24](https://github.com/user-attachments/assets/77b8b2a4-9241-42bf-b0ae-dff768eae3be)![Simulator Screenshot - iPhone 16 Pro Max - 2025-03-26 at 21 08 31](https://github.com/user-attachments/assets/036e8f8b-44f4-48dc-8e64-2166e8e8e632)![Simulator Screenshot - iPhone 16 Pro Max - 2025-03-26 at 21 09 02](https://github.com/user-attachments/assets/1822800b-6be0-469f-b098-66ebe071bd1b)
+## This is a basic shopping cart app built using Flutter. The app allows users to browse a list of products, apply discounts, add products to the cart, and view the cart summary with the total price.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/77b8b2a4-9241-42bf-b0ae-dff768eae3be" width="30%">
+  <img src="https://github.com/user-attachments/assets/036e8f8b-44f4-48dc-8e64-2166e8e8e632" width="30%">
+  <img src="https://github.com/user-attachments/assets/1822800b-6be0-469f-b098-66ebe071bd1b" width="30%">
+</p>
+
+## Features
+Product Listing: Fetches product data from DummyJSON API.
+Discount Calculation: Displays the final price after applying the discount percentage.
+Add to Cart: Users can add products to their cart.
+Cart Summary: Displays added items along with total price (quantity * price).
+Pagination: Efficiently loads products in pages.
+State Management: Implemented using Riverpod.
+
+## Tech Stack
+Flutter: Frontend framework
+Riverpod: State management
+Dio/HTTP: API integration
 
 
+## Installation & Setup
+
+Clone the repository:
+git clone https://github.com/mxhit17/shopping_cart/
+
+Navigate to the project directory:
+cd shopping-cart-app
+
+Install dependencies:
+flutter pub get
+
+Run the app:
+flutter run
 
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
 # shopping_cart
