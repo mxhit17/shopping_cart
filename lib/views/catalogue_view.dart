@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shoping_cart/controller/product_controller.dart';
 import 'package:shoping_cart/utils/prefs/preference_manager.dart';
+import 'package:shoping_cart/utils/provider.dart';
 import 'package:shoping_cart/views/cart_view.dart';
 import 'dart:async';
 import 'package:shoping_cart/widget/product_card.dart';
@@ -21,8 +22,12 @@ class _CatalogueScreenState extends ConsumerState<CatalogueScreen> {
   @override
   void initState() {
     super.initState();
+    final prefs = GetIt.instance<PreferencesManager>();
     Future.microtask(() {
       ref.read(productsControllerProvider.notifier).fetchProducts();
+      ref
+          .read(totalCartItemsProvider.notifier)
+          .setItemCount(prefs.getCartProducts().length);
     });
 
     // _scrollController.addListener(_scrollListener);
@@ -46,6 +51,7 @@ class _CatalogueScreenState extends ConsumerState<CatalogueScreen> {
   @override
   Widget build(BuildContext context) {
     final productsState = ref.watch(productsControllerProvider);
+    final itemInCartState = ref.watch(totalCartItemsProvider);
     final prefs = GetIt.instance<PreferencesManager>();
 
     final totalItemsInCart = prefs.getCartProducts().length;
@@ -84,7 +90,11 @@ class _CatalogueScreenState extends ConsumerState<CatalogueScreen> {
                       radius: 10,
                       backgroundColor: Colors.red,
                       child: Text(
-                        totalItemsInCart.toString(),
+                        ref
+                            .read(totalCartItemsProvider.notifier)
+                            .getCount()
+                            .toString(),
+                        // totalItemsInCart.toString(),
                         style: TextStyle(fontSize: 12, color: Colors.white),
                       ),
                     ),
@@ -123,6 +133,7 @@ class _CatalogueScreenState extends ConsumerState<CatalogueScreen> {
               product: product,
               onAdd: () {
                 setState(() {
+                  ref.read(totalCartItemsProvider.notifier).increment();
                   prefs.addProductToCart(product);
                 });
                 print("Add product to cart");

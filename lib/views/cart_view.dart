@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shoping_cart/models/product_model.dart';
 import 'package:shoping_cart/utils/prefs/preference_manager.dart';
+import 'package:shoping_cart/utils/provider.dart';
 
 class CartScreen extends ConsumerStatefulWidget {
   const CartScreen({super.key});
@@ -61,6 +62,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   @override
   Widget build(BuildContext context) {
     final _remPref = GetIt.instance<PreferencesManager>();
+    final itemsInCartState = ref.watch(totalCartItemsProvider);
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 252, 236, 238),
       appBar: AppBar(
@@ -157,6 +159,9 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                             child: GestureDetector(
                               onTap: () {
                                 setState(() {
+                                  ref
+                                      .read(totalCartItemsProvider.notifier)
+                                      .decrement();
                                   _remPref.removeProductFromCart(index);
                                   allProducts = _remPref.getCartProducts();
                                 });
