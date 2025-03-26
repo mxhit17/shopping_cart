@@ -79,85 +79,103 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
-              itemCount: allProducts.length,
-              itemBuilder: (context, index) {
-                final item = allProducts[index];
-                return Stack(
-                  children: [
-                    Card(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                      child: ListTile(
-                        leading: Image.network(item.thumbnail ?? "x"),
-                        title: Text(item.title ?? "x",
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold)),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(item.brand ?? "x"),
-                            Row(
-                              children: [
-                                Text("₹${getDiscountedPrice(item)}",
-                                    style: const TextStyle(
-                                        decoration:
-                                            TextDecoration.lineThrough)),
-                                const SizedBox(width: 5),
-                                Text("₹${item.price}",
+            child: allProducts.isEmpty
+                ? Center(
+                    child: Text(
+                      "Oops!\nNo products in the cart...",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: allProducts.length,
+                    itemBuilder: (context, index) {
+                      final item = allProducts[index];
+                      return Stack(
+                        children: [
+                          Card(
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            child: ListTile(
+                                leading: Image.network(item.thumbnail ?? "x"),
+                                title: Text(item.title ?? "x",
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                            Text("${item.discountPercentage}% OFF",
-                                style: const TextStyle(color: Colors.red)),
-                          ],
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.remove),
-                              onPressed: () =>
-                                  updateQuantity(index, -1, allProducts),
-                            ),
-                            Text(item.quantity ?? "1"),
-                            IconButton(
-                              icon: const Icon(Icons.add),
-                              onPressed: () =>
-                                  updateQuantity(index, 1, allProducts),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 4,
-                      right: 4,
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _remPref.removeProductFromCart(index);
-                            allProducts = _remPref.getCartProducts();
-                          });
-                        },
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            color: Colors.red,
-                            shape: BoxShape.circle,
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(item.brand ?? "x"),
+                                    Row(
+                                      children: [
+                                        Text("₹${getDiscountedPrice(item)}",
+                                            style: const TextStyle(
+                                                decoration: TextDecoration
+                                                    .lineThrough)),
+                                        const SizedBox(width: 5),
+                                        Text("₹${item.price}",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                      ],
+                                    ),
+                                    Text("${item.discountPercentage}% OFF",
+                                        style:
+                                            const TextStyle(color: Colors.red)),
+                                  ],
+                                ),
+                                trailing: Container(
+                                  decoration: BoxDecoration(
+                                    // border: Border.all(),
+                                    color: Colors.pink[50],
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.remove),
+                                        onPressed: () => updateQuantity(
+                                            index, -1, allProducts),
+                                      ),
+                                      Text(item.quantity ?? "1"),
+                                      IconButton(
+                                        icon: const Icon(Icons.add),
+                                        onPressed: () => updateQuantity(
+                                            index, 1, allProducts),
+                                      ),
+                                    ],
+                                  ),
+                                )),
                           ),
-                          child: const Icon(
-                            Icons.close,
-                            color: Colors.white,
-                            size: 16,
+                          Positioned(
+                            top: 4,
+                            right: 4,
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _remPref.removeProductFromCart(index);
+                                  allProducts = _remPref.getCartProducts();
+                                });
+                              },
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.close,
+                                  color: Colors.white,
+                                  size: 16,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
+                        ],
+                      );
+                    },
+                  ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),

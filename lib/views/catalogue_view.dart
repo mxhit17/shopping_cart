@@ -57,33 +57,41 @@ class _CatalogueScreenState extends ConsumerState<CatalogueScreen> {
         title: Text('Catalogue'),
         backgroundColor: Color.fromARGB(255, 252, 236, 238),
         actions: [
-          Stack(
-            children: [
-              IconButton(
-                icon: Icon(Icons.shopping_cart_outlined),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CartScreen(),
-                    ),
-                  );
-                },
-              ),
-              Positioned(
-                right: 5,
-                top: 5,
-                child: CircleAvatar(
-                  radius: 10,
-                  backgroundColor: Colors.red,
-                  child: Text(
-                    totalItemsInCart.toString(),
-                    style: TextStyle(fontSize: 12, color: Colors.white),
-                  ),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CartScreen(),
                 ),
-              ),
-            ],
-          ),
+              );
+            },
+            // borderRadius: BorderRadius.circular(
+            //     20), // Adds a ripple effect within a circular area
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(Icons.shopping_cart_outlined, size: 32),
+                ), // Adjust size if needed
+                if (totalItemsInCart >=
+                    0) // Show badge only when cart has items
+                  Positioned(
+                    right: 5,
+                    top: 5,
+                    child: CircleAvatar(
+                      radius: 10,
+                      backgroundColor: Colors.red,
+                      child: Text(
+                        totalItemsInCart.toString(),
+                        style: TextStyle(fontSize: 12, color: Colors.white),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          )
         ],
       ),
       body: productsState.when(
