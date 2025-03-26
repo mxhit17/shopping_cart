@@ -16,13 +16,40 @@ class ProductCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-              child: Image.network(
-                product.thumbnail ?? "x",
-                fit: BoxFit.cover,
-                width: double.infinity,
-              ),
+            child: Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+                  child: Image.network(
+                    product.thumbnail ?? "x",
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                  ),
+                ),
+                Positioned(
+                  bottom: 8,
+                  right: 8,
+                  child: ElevatedButton.icon(
+                    onPressed: onAdd,
+                    icon: Icon(Icons.add_shopping_cart, color: Colors.white),
+                    label: Text(
+                      "Add",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.pinkAccent, // Customize color
+                      foregroundColor: Colors.white, // Text color
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 5, // Adds a subtle shadow
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           Padding(
@@ -56,13 +83,6 @@ class ProductCard extends StatelessWidget {
                       TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
                 ),
               ],
-            ),
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: ElevatedButton(
-              onPressed: onAdd,
-              child: Text("Add"),
             ),
           ),
         ],

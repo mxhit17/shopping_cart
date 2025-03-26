@@ -64,11 +64,13 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   Widget build(BuildContext context) {
     final _remPref = GetIt.instance<PreferencesManager>();
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 252, 236, 238),
       appBar: AppBar(
         backgroundColor: Colors.pink[100],
+        centerTitle: true,
         title: const Text("Cart", style: TextStyle(color: Colors.black)),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -158,52 +160,86 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             decoration: BoxDecoration(
-              color: Colors.pink[50],
+              color: Colors.white,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20),
                 topRight: Radius.circular(20),
               ),
             ),
-            child: Column(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("Amount Price", style: TextStyle(fontSize: 16)),
-                    Text("₹${getTotalAmount(allProducts)}",
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    const Text(
+                      "Amount Price",
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start, // Aligns icon properly
+                      children: [
+                        Icon(
+                          Icons.currency_rupee,
+                          size: 26, // Bigger rupee icon
+                          weight:
+                              700, // Makes it bolder (optional, available in Flutter 3.7+)
+                        ),
+                        Text(
+                          getTotalAmount(allProducts).toString(),
+                          style: const TextStyle(
+                            fontSize: 22, // Slightly smaller text
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                 ),
-                const SizedBox(height: 10),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.pink,
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 50, vertical: 15),
+                        horizontal: 24, vertical: 14),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   onPressed: () {},
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text("Check Out", style: TextStyle(fontSize: 16)),
-                      const SizedBox(width: 5),
+                      const Text(
+                        "Check Out",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                      const SizedBox(width: 8),
                       CircleAvatar(
-                        radius: 12,
+                        radius: 10,
                         backgroundColor: Colors.white,
-                        child: Text("${getTotalItems()}",
-                            style: const TextStyle(color: Colors.black)),
+                        child: Text(
+                          getTotalItems().toString(),
+                          style: const TextStyle(
+                            color: Colors.pink,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
               ],
             ),
-          ),
+          )
         ],
       ),
     );

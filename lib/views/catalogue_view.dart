@@ -53,13 +53,14 @@ class _CatalogueScreenState extends ConsumerState<CatalogueScreen> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 252, 236, 238),
       appBar: AppBar(
+        centerTitle: true,
         title: Text('Catalogue'),
         backgroundColor: Color.fromARGB(255, 252, 236, 238),
         actions: [
           Stack(
             children: [
               IconButton(
-                icon: Icon(Icons.shopping_cart),
+                icon: Icon(Icons.shopping_cart_outlined),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -95,10 +96,12 @@ class _CatalogueScreenState extends ConsumerState<CatalogueScreen> {
             mainAxisSpacing: 10,
             childAspectRatio: 0.75,
           ),
-          itemCount: products.length +
-              (ref.watch(productsControllerProvider.notifier).isLoadingMore
-                  ? 1
-                  : 0),
+          // itemCount: products.length +
+          //     (ref.watch(productsControllerProvider.notifier).isLoadingMore
+          //         ? 1
+          //         : 0),
+          itemCount:
+              productsState.isLoading ? products.length + 1 : products.length,
           itemBuilder: (context, index) {
             if (index == products.length &&
                 ref.watch(productsControllerProvider).isLoading) {
