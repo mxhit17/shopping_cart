@@ -63,215 +63,227 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   Widget build(BuildContext context) {
     final _remPref = GetIt.instance<PreferencesManager>();
     final itemsInCartState = ref.watch(totalCartItemsProvider);
-    return Scaffold(
-      backgroundColor: Color.fromARGB(255, 252, 236, 238),
-      appBar: AppBar(
-        backgroundColor: Colors.pinkAccent.shade200,
-        centerTitle: true,
-        title: const Text("Cart", style: TextStyle(color: Colors.black)),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-          onPressed: () {
-            _remPref.clearCart();
-            for (int i = 0; i < allProducts.length; i++) {
-              _remPref.addProductToCart(allProducts[i]);
-            }
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: allProducts.isEmpty
-                ? Center(
-                    child: Text(
-                      "Oops!\nNo products in the cart...",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: allProducts.length,
-                    itemBuilder: (context, index) {
-                      final item = allProducts[index];
-                      return Stack(
-                        children: [
-                          Card(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                            child: ListTile(
-                                leading: Image.network(item.thumbnail ?? "x"),
-                                title: Text(item.title ?? "x",
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold)),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(item.brand ?? "x"),
-                                    Row(
+    return PopScope(
+        canPop: true,
+        onPopInvoked: (didPop) {
+          _remPref.clearCart();
+          for (int i = 0; i < allProducts.length; i++) {
+            _remPref.addProductToCart(allProducts[i]);
+          }
+        },
+        child: Scaffold(
+          backgroundColor: Color.fromARGB(255, 252, 236, 238),
+          appBar: AppBar(
+            backgroundColor: Colors.pinkAccent.shade200,
+            centerTitle: true,
+            title: const Text("Cart", style: TextStyle(color: Colors.black)),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+              onPressed: () {
+                _remPref.clearCart();
+                for (int i = 0; i < allProducts.length; i++) {
+                  _remPref.addProductToCart(allProducts[i]);
+                }
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          body: Column(
+            children: [
+              Expanded(
+                child: allProducts.isEmpty
+                    ? Center(
+                        child: Text(
+                          "Oops!\nNo products in the cart...",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount: allProducts.length,
+                        itemBuilder: (context, index) {
+                          final item = allProducts[index];
+                          return Stack(
+                            children: [
+                              Card(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 5),
+                                child: ListTile(
+                                    leading:
+                                        Image.network(item.thumbnail ?? "x"),
+                                    title: Text(item.title ?? "x",
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold)),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Text("₹${getDiscountedPrice(item)}",
+                                        Text(item.brand ?? "x"),
+                                        Row(
+                                          children: [
+                                            Text("₹${getDiscountedPrice(item)}",
+                                                style: const TextStyle(
+                                                    decoration: TextDecoration
+                                                        .lineThrough)),
+                                            const SizedBox(width: 5),
+                                            Text("₹${item.price}",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                          ],
+                                        ),
+                                        Text("${item.discountPercentage}% OFF",
                                             style: const TextStyle(
-                                                decoration: TextDecoration
-                                                    .lineThrough)),
-                                        const SizedBox(width: 5),
-                                        Text("₹${item.price}",
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold)),
+                                                color: Colors.red)),
                                       ],
                                     ),
-                                    Text("${item.discountPercentage}% OFF",
-                                        style:
-                                            const TextStyle(color: Colors.red)),
-                                  ],
+                                    trailing: Container(
+                                      decoration: BoxDecoration(
+                                        // border: Border.all(),
+                                        color: Colors.pink[50],
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(Icons.remove),
+                                            onPressed: () => updateQuantity(
+                                                index, -1, allProducts),
+                                          ),
+                                          Text(item.quantity ?? "1"),
+                                          IconButton(
+                                            icon: const Icon(Icons.add),
+                                            onPressed: () => updateQuantity(
+                                                index, 1, allProducts),
+                                          ),
+                                        ],
+                                      ),
+                                    )),
+                              ),
+                              Positioned(
+                                top: 4,
+                                right: 4,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      ref
+                                          .read(totalCartItemsProvider.notifier)
+                                          .decrement();
+                                      _remPref.removeProductFromCart(index);
+                                      allProducts = _remPref.getCartProducts();
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      color: Colors.red,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                      size: 16,
+                                    ),
+                                  ),
                                 ),
-                                trailing: Container(
-                                  decoration: BoxDecoration(
-                                    // border: Border.all(),
-                                    color: Colors.pink[50],
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(Icons.remove),
-                                        onPressed: () => updateQuantity(
-                                            index, -1, allProducts),
-                                      ),
-                                      Text(item.quantity ?? "1"),
-                                      IconButton(
-                                        icon: const Icon(Icons.add),
-                                        onPressed: () => updateQuantity(
-                                            index, 1, allProducts),
-                                      ),
-                                    ],
-                                  ),
-                                )),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+              ),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Amount Price",
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w500),
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          crossAxisAlignment:
+                              CrossAxisAlignment.start, // Aligns icon properly
+                          children: [
+                            Icon(
+                              Icons.currency_rupee,
+                              size: 26, // Bigger rupee icon
+                              weight:
+                                  700, // Makes it bolder (optional, available in Flutter 3.7+)
+                            ),
+                            Text(
+                              getTotalAmount(allProducts).toString(),
+                              style: const TextStyle(
+                                fontSize: 22, // Slightly smaller text
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.pink,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onPressed: () {
+                        _remPref.clearCart();
+                        for (int i = 0; i < allProducts.length; i++) {
+                          _remPref.addProductToCart(allProducts[i]);
+                        }
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            "Check Out",
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
                           ),
-                          Positioned(
-                            top: 4,
-                            right: 4,
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  ref
-                                      .read(totalCartItemsProvider.notifier)
-                                      .decrement();
-                                  _remPref.removeProductFromCart(index);
-                                  allProducts = _remPref.getCartProducts();
-                                });
-                              },
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  color: Colors.red,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(
-                                  Icons.close,
-                                  color: Colors.white,
-                                  size: 16,
-                                ),
+                          const SizedBox(width: 8),
+                          CircleAvatar(
+                            radius: 10,
+                            backgroundColor: Colors.white,
+                            child: Text(
+                              getTotalItems().toString(),
+                              style: const TextStyle(
+                                color: Colors.pink,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
                         ],
-                      );
-                    },
-                  ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Amount Price",
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                      ),
                     ),
-                    const SizedBox(height: 4),
-                    Row(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start, // Aligns icon properly
-                      children: [
-                        Icon(
-                          Icons.currency_rupee,
-                          size: 26, // Bigger rupee icon
-                          weight:
-                              700, // Makes it bolder (optional, available in Flutter 3.7+)
-                        ),
-                        Text(
-                          getTotalAmount(allProducts).toString(),
-                          style: const TextStyle(
-                            fontSize: 22, // Slightly smaller text
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    )
                   ],
                 ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.pink,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  onPressed: () {
-                    _remPref.clearCart();
-                    for (int i = 0; i < allProducts.length; i++) {
-                      _remPref.addProductToCart(allProducts[i]);
-                    }
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text(
-                        "Check Out",
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
-                      const SizedBox(width: 8),
-                      CircleAvatar(
-                        radius: 10,
-                        backgroundColor: Colors.white,
-                        child: Text(
-                          getTotalItems().toString(),
-                          style: const TextStyle(
-                            color: Colors.pink,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
+              )
+            ],
+          ),
+        ));
   }
 }
