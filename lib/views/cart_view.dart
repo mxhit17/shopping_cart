@@ -35,8 +35,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       int quantity = int.tryParse(products[i].quantity ?? "1") ?? 1;
 
       totalAmount = totalAmount + (products[i].price * quantity);
-      // totalAmount =
-      //     totalAmount + (double.parse(getDiscountedPrice(products[i])));
     }
 
     return totalAmount.toStringAsFixed(2);
@@ -66,12 +64,16 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 252, 236, 238),
       appBar: AppBar(
-        backgroundColor: Colors.pink[100],
+        backgroundColor: Colors.pinkAccent.shade200,
         centerTitle: true,
         title: const Text("Cart", style: TextStyle(color: Colors.black)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () {
+            _remPref.clearCart();
+            for (int i = 0; i < allProducts.length; i++) {
+              _remPref.addProductToCart(allProducts[i]);
+            }
             Navigator.pop(context);
           },
         ),
@@ -228,7 +230,12 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    _remPref.clearCart();
+                    for (int i = 0; i < allProducts.length; i++) {
+                      _remPref.addProductToCart(allProducts[i]);
+                    }
+                  },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

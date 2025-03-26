@@ -55,7 +55,7 @@ class _CatalogueScreenState extends ConsumerState<CatalogueScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('Catalogue'),
-        backgroundColor: Color.fromARGB(255, 252, 236, 238),
+        backgroundColor: Colors.pinkAccent.shade100,
         actions: [
           InkWell(
             onTap: () {

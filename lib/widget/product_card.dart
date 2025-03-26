@@ -27,25 +27,31 @@ class ProductCard extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  bottom: 8,
+                  bottom: 2,
                   right: 8,
                   child: ElevatedButton.icon(
                     onPressed: onAdd,
-                    icon: Icon(Icons.add_shopping_cart, color: Colors.white),
+                    icon: Icon(
+                      Icons.add_shopping_cart,
+                      color: Colors.white,
+                      size: 12, // Reduced icon size
+                    ),
                     label: Text(
                       "Add",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold), // Reduced text size
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.pinkAccent, // Customize color
                       foregroundColor: Colors.white, // Text color
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6), // Reduced padding
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(
+                            6), // Slightly smaller border radius
                       ),
-                      elevation: 5, // Adds a subtle shadow
+                      elevation: 3, // Slightly reduced shadow
                     ),
                   ),
                 ),
