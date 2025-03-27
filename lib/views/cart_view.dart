@@ -174,6 +174,14 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                           .read(totalCartItemsProvider.notifier)
                                           .decrement();
                                       _remPref.removeProductFromCart(index);
+                                      _remPref.clearCart();
+                                      allProducts.removeAt(index);
+                                      for (int i = 0;
+                                          i < allProducts.length;
+                                          i++) {
+                                        _remPref
+                                            .addProductToCart(allProducts[i]);
+                                      }
                                       allProducts = _remPref.getCartProducts();
                                     });
                                   },
